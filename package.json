@@ -2,7 +2,7 @@
   "name": "com.kaynir.scenes",
   "version": "0.0.1",
   "displayName": "Scene Management",
-  "description": "Пакет управления сценами на основе менеджера, встроенного в Unity.",
+  "description": "Пакет управления переходами между сценами с загрузочным экраном.",
   "unity": "2021.3",
   "keywords": [
     "kaynir, scenes, loading screen"
