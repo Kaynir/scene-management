@@ -1,0 +1,15 @@
+{
+  "name": "com.kaynir.scenes",
+  "version": "0.0.1",
+  "displayName": "Scene Management",
+  "description": "Пакет управления сценами на основе менеджера, встроенного в Unity.",
+  "unity": "2021.3",
+  "keywords": [
+    "kaynir, scenes, loading screen"
+  ],
+  "author": {
+    "name": "Денис Знов",
+    "email": "kaynir.games@gmail.com",
+    "url": "https://github.com/Kaynir/scene-management"
+  }
+}
