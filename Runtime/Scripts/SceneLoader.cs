@@ -1,66 +1,76 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Kaynir.Scenes
 {
-    public class SceneLoader : MonoBehaviour, ISceneLoader
+    public class SceneLoader : MonoBehaviour
     {
-        public const float MAX_PROGRESS = 0.9f;
-
-        [SerializeField] private FadeScreen _fadeScreen = null;
-        [SerializeField] private LoadingScreen _loadingScreen = null;
+        [SerializeField] private SplashScreen _splashScreen = null;
+        [SerializeField] private List<int> _persistentScenes = new List<int>() { 0 };
 
         public bool IsLoading { get; private set; }
 
-        public void Load(int sceneIndex)
+        public void Load(int mainScene, List<int> extraScenes)
         {
             if (IsLoading) return;
-            StartCoroutine(LoadRoutine(sceneIndex));
+            StartCoroutine(LoadRoutine(mainScene, extraScenes));
         }
 
-        public void LoadAdditive(int sceneIndex)
+        public void Load(int mainScene) => Load(mainScene, new List<int>());
+
+        public AsyncOperation LoadAdditive(int sceneIndex, bool isActive)
         {
-            SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
+            AsyncOperation operation = SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Additive);
+
+            if (isActive)
+            {
+                operation.completed += (op) =>
+                {
+                    Scene scene = SceneManager.GetSceneByBuildIndex(sceneIndex);
+                    SceneManager.SetActiveScene(scene);
+                };
+            }
+
+            return operation;
         }
 
-        public void Unload(int sceneIndex)
+        public AsyncOperation Unload(int sceneIndex)
         {
-            SceneManager.UnloadSceneAsync(sceneIndex);
+            return SceneManager.UnloadSceneAsync(sceneIndex);
         }
 
-        private IEnumerator LoadRoutine(int sceneIndex)
+        private IEnumerator LoadRoutine(int mainScene, List<int> extraScenes)
         {
             IsLoading = true;
 
-            if (_fadeScreen)
+            yield return _splashScreen.FadeInRoutine();
+
+            yield return UnloadCurrentScenesRoutine();
+            yield return LoadAdditive(mainScene, true);
+
+            foreach (int index in extraScenes)
             {
-                yield return _fadeScreen.FadeInRoutine();
+                yield return LoadAdditive(index, false);
             }
 
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
+            yield return _splashScreen.FadeOutRoutine();
 
-            yield return _loadingScreen ? LoadingScreenRoutine(asyncLoad) : asyncLoad;
-
-            if (_fadeScreen)
-            {
-                yield return _fadeScreen.FadeOutRoutine();
-            }
-            
             IsLoading = false;
         }
 
-        private IEnumerator LoadingScreenRoutine(AsyncOperation asyncLoad)
+        private IEnumerator UnloadCurrentScenesRoutine()
         {
-            _loadingScreen.SetActive(true);
-
-            while (!asyncLoad.isDone)
+            for (int i = 0; i < SceneManager.sceneCount; i++)
             {
-                _loadingScreen.SetProgress(asyncLoad.progress / MAX_PROGRESS);
-                yield return null;
+                Scene scene = SceneManager.GetSceneAt(i);
+                
+                if (!_persistentScenes.Contains(scene.buildIndex))
+                {
+                    yield return Unload(scene.buildIndex);
+                }
             }
-
-            _loadingScreen.SetActive(false);
         }
     }
 }

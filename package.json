@@ -5,7 +5,7 @@
   "description": "Пакет управления переходами между сценами с загрузочным экраном.",
   "unity": "2021.3",
   "keywords": [
-    "kaynir, scenes, loading screen"
+    "scenes, loading screen"
   ],
   "author": {
     "name": "Денис Знов",
