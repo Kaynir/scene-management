@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using Kaynir.Scenes.SplashScreens;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,15 +12,25 @@ namespace Kaynir.Scenes
 
         public bool IsLoading { get; private set; }
 
-        public void FadeInScene(int targetScene, List<int> additiveScenes)
+        public void LoadSceneFaded(int activeScene, List<int> extraScenes)
         {
             if (IsLoading) return;
-            StartCoroutine(LoadRoutine(targetScene, additiveScenes));
+            StartCoroutine(LoadRoutine(activeScene, extraScenes));
         }
 
-        public void FadeInScene(int targetScene)
+        public void LoadSceneFaded(int activeScene)
         {
-            FadeInScene(targetScene, new List<int>());
+            LoadSceneFaded(activeScene, new List<int>());
+        }
+
+        public void LoadSceneFaded(int activeScene, params int[] extraScenes)
+        {
+            LoadSceneFaded(activeScene, new List<int>(extraScenes));
+        }
+
+        public void LoadSceneFaded(SceneCollection collection)
+        {
+            LoadSceneFaded(collection.ActiveScene, collection.ExtraScenes);
         }
 
         public AsyncOperation LoadScene(int sceneIndex, LoadSceneMode mode)
@@ -30,18 +40,19 @@ namespace Kaynir.Scenes
 
         public void UnloadScene(int sceneIndex)
         {
+            if (!SceneManager.GetSceneByBuildIndex(sceneIndex).isLoaded) return;
             SceneManager.UnloadSceneAsync(sceneIndex);
         }
 
-        private IEnumerator LoadRoutine(int targetScene, List<int> additiveScenes)
+        private IEnumerator LoadRoutine(int activeScene, List<int> extraScenes)
         {
             IsLoading = true;
 
             yield return _splashScreen.FadeInRoutine();
             
-            yield return LoadScene(targetScene, LoadSceneMode.Single);
+            yield return LoadScene(activeScene, LoadSceneMode.Single);
 
-            foreach (int scene in additiveScenes)
+            foreach (int scene in extraScenes)
             {
                 yield return LoadScene(scene, LoadSceneMode.Additive);
             }

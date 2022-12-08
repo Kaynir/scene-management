@@ -1,4 +1,4 @@
-namespace Kaynir.Scenes
+namespace Kaynir.Scenes.SplashScreens
 {
     public enum SplashState
     {

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Kaynir.Scenes
+namespace Kaynir.Scenes.SplashScreens
 {
     public abstract class SplashScreen : MonoBehaviour
     {
@@ -9,8 +9,8 @@ namespace Kaynir.Scenes
         public const float MAX_ALPHA = 1f;
 
         [SerializeField] private SplashState _startState = SplashState.None;
-        [SerializeField] private BlendConfig _fadeInConfig = null;
-        [SerializeField] private BlendConfig _fadeOutConfig = null;
+        [SerializeField] private BlendSettings _fadeInConfig = null;
+        [SerializeField] private BlendSettings _fadeOutConfig = null;
 
         protected virtual void Start()
         {
@@ -55,7 +55,7 @@ namespace Kaynir.Scenes
 
         protected abstract void SetAlpha(float alpha);
 
-        private IEnumerator FadeRoutine(BlendConfig blend, float alpha)
+        private IEnumerator FadeRoutine(BlendSettings blend, float alpha)
         {
             for (float t = 0; t < blend.Time; t += Time.unscaledDeltaTime)
             {

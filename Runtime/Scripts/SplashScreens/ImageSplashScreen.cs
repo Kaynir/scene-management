@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Kaynir.Scenes
+namespace Kaynir.Scenes.SplashScreens
 {
     public class ImageSplashScreen : SplashScreen
     {

@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace Kaynir.Scenes
+namespace Kaynir.Scenes.SplashScreens
 {
-    [CreateAssetMenu(menuName = "Configs/Scenes/Blend Config")]
-    public class BlendConfig : ScriptableObject
+    [CreateAssetMenu(menuName = "Scriptable Objects/Scenes/Blend Settings")]
+    public class BlendSettings : ScriptableObject
     {
         [SerializeField] private AnimationCurve _curve = AnimationCurve.Linear(0, 0, 1, 1);
         [SerializeField, Min(0)] private float _time = 1;
