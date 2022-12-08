@@ -1,6 +1,6 @@
 {
   "name": "com.kaynir.scenes",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "displayName": "Scene Management",
   "description": "Пакет управления переходами между сценами с загрузочным экраном.",
   "unity": "2021.3",
