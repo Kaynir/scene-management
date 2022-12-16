@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Kaynir.Scenes
 {
@@ -9,6 +10,7 @@ namespace Kaynir.Scenes
         [SerializeField] private int _buildIndex = 0;
 
         public int BuildIndex => _buildIndex;
+        public bool IsLoaded => SceneManager.GetSceneByBuildIndex(this).isLoaded;
 
         public SceneReference(int buildIndex)
         {

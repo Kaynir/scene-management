@@ -1,6 +1,6 @@
 namespace Kaynir.Scenes.SplashScreens
 {
-    public enum SplashState
+    public enum FadeState
     {
         None,
         MinAlpha,
